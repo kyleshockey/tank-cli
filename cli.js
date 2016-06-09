@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --harmony
 
 const fs = require('fs')
 const path = require('path')
-const request = require('request')
+const Request = require('request')
 const expandTilde = require('expand-tilde')
 
 const package = require('./package.json')
@@ -10,11 +10,20 @@ const config = require('./config')
 const track = require('./components/keen')
 const log = require('./components/log')
 
+const request = Request.defaults({
+  headers: {'User-Agent': 'tank/' + package.version}
+})
+
 track('executions', {
   version: package.version,
   node: process.version,
   platform: process.platform
 })
+
+if(process.argv.length < 3) {
+  console.log('usage: tank [path_to_file] [path_to_another_file]...[path_to_last_file]')
+  process.exit()
+}
 
 const files = process.argv.slice(2)
   .map(filename => path.resolve(expandTilde(filename)))
@@ -29,17 +38,13 @@ intervalId = setInterval(function() { process.stdout.write('.'); }, 3000);
 
 request.post({
   url: config.server,
-  formData: {uploads: files.map(filePath => fs.createReadStream(filePath))},
-  headers: {'User-Agent': 'tank/' + package.version}
+  formData: {uploads: files.map(filePath => fs.createReadStream(filePath))}
 }, function optionalCallback(err, httpResponse, body) {
   clearInterval(intervalId)
-  process.stdout.write('\n')
+  process.stdout.write('\nDone.')
   if (err) {
     handleError(err)
   } else {
-    if(parseFloat(httpResponse.headers['x-latest-version']) > parseFloat(package.version) ) {
-      console.log('Tank ' + httpResponse.headers['x-latest-version'] + ' is now available.\n\'npm i -g tank\' to upgrade')
-    }
     console.log(body)
   }
 });

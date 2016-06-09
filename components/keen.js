@@ -9,7 +9,6 @@ function track(evt, data, fn) {
     return
   }
   fn = fn || function() {}
-  console.log(config.server + 'track')
   request.put(config.server + 'track', {
     json: true,
     body: {
