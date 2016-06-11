@@ -4,7 +4,7 @@
 
 [![NPM](https://nodei.co/npm/tank.png?global=true)](https://nodei.co/npm/tank/)
 
-This is the CLI for Tank's file sharing service.
+This is the CLI for Tank's file sharing service. The open-source server that powers Tank is available [here](https://github.com/tankfs/tank-server).
 
 ## Installation
 0. install [npm](https://npmjs.com/) and `node >= 4.0` if you don't have them already.
@@ -30,7 +30,7 @@ That's all there is to it!
 You can upload multiple files at once as well. For example:
 
     → tank ./sweet_grinds.mp4 ./sick_ollies.wmv
-    
+
 ```
 Uploading 2 files...
 Done.
